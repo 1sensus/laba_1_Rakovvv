@@ -1,7 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include<list>
+#include <list>
 
 using namespace std;
 
@@ -84,15 +84,16 @@ standart_of_pipe Create_pipe()
 	cout << "Vvedite status trubi'";
 	cin >> s.ready_pipe;
 	return s;
-}/*
-standart_of_nps Search_by_id(list<standart_of_nps> list_nps, int id)
+}
+standart_of_nps Search_by_id(list<standart_of_nps> list_nps, standart_of_nps id_nps)
 {
-	for (int i = 0; i != list_nps.size; ++i)
+	int id = id_nps.id_nps;
+	for (unsigned int i = 0; i < unsigned( list_nps.size()); ++i)
 	{
 		if (list_nps[i].id_nps == id) { return list_nps[i]; }
 	}
 	cout << "ID ne naiden";
-}*/
+}
 int main()
 {
 	list <standart_of_pipe> pipe_list = {};
