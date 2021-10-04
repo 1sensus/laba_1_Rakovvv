@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <list>
+#include <vector>
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void Print_menu() {
 	cout << "5. Print nps" << endl;
 	cout << "6. EPrint all nps list" << endl;
 	cout << "8. Exit" << endl;
-	cout << ">";	
+	cout << ">";
 }
 int get_variant(int count) {
 	int digit{ 0 };
@@ -62,11 +63,12 @@ void Print_nps(standart_of_nps n)
 	cout << "+                                          +" << endl;
 	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
 }
-void Print_nps_list(list<standart_of_nps>nps_list, int size_nps_list)
-{	 
-	for (int i = 0; i < size_nps_list; ++i)
+void Print_nps_list(list <standart_of_nps> nps_list)
+{	
+	for (int i = 0; i < nps_list.size();++i) 
 	{
-		Print_nps(nps_list[i]);
+		cout << i << endl;
+		//cout << nps_list[i].id_nps;
 	}
 }
 standart_of_nps Create_nps()
@@ -131,7 +133,7 @@ int main()
 			Print_nps(nps);
 			break;
 		case 6:
-			Print_nps_list(nps_list, size_nps_list);
+			Print_nps_list(nps_list);
 			break;
 		}
 		if (variant != 8)
