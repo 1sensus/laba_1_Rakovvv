@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <list>
 #include <vector>
+
 //vector,имя через пробел,передача по ссылке и значению, проверка ввода,сохранение и загрузка в из файла
 
 using namespace std;
@@ -20,7 +21,18 @@ typedef struct standart_of_nps
 	string name_nps;
 	bool ready_nps; 
 }standart_of_nps;
+int get_variant(int count) {
+	int variant;
+	char s[100]; // строка для считывания введённых данных
+	sscanf("%s", s); // считываем строку
 
+	// пока ввод некорректен, сообщаем об этом и просим повторить его
+	while (sscanf(s, "%d", &variant) != 1 || variant < 1 || variant > count) {
+		printf("Incorrect input. Try again: "); // выводим сообщение об ошибке
+		sscanf("%s", s); // считываем строку повторно
+	}
+	return variant;
+}
 void Print_menu() {
 	system("cls");	
 	cout << "What do we want to do?" << endl;
@@ -30,6 +42,7 @@ void Print_menu() {
 	cout << "4. Add nps" << endl;
 	cout << "5. Print nps" << endl;
 	cout << "6. EPrint all nps list" << endl;
+	cout << "7. Search by ID" << endl;
 	cout << "8. Exit" << endl;
 	cout << ">";
 }
@@ -73,26 +86,32 @@ standart_of_pipe Create_pipe()
 	cin >> s.ready_pipe;
 	return s;
 }
-/*standart_of_nps Search_by_id(list<standart_of_nps> list_nps, int id)
+void Search_by_id(list<standart_of_nps>nps_list)
 {
-	int size_nps_list = sizeof(list_nps) / sizeof(standart_of_nps);
-	for (int i = 0; i <size_nps_list; ++i)
+	int search_id;
+	cout << "Vvedite ID";
+	cin >> search_id;
+	for (auto& nps : nps_list)
 	{
-		if (list_nps[i].id_nps == id) { cout << list_nps[i]; }
+		if (nps.id_nps == search_id) 
+		{
+			 Print_nps(nps); 
+		}
+		else { cout << "ID ne naiden"; }
+
 	}
-	cout << "ID ne naiden";
-}*/
+	
+}
 int main()
 {
 	list <standart_of_pipe> pipe_list = {};
 	list <standart_of_nps> nps_list = {};
-	int variant;
+	int variant=get_variant(5);
 	int size_nps_list = sizeof(nps_list) / sizeof(standart_of_nps);
 	standart_of_pipe pipe;
 	standart_of_nps nps;
 	do {
 		Print_menu();
-		variant = get_variant();
 		switch (variant) {
 		case 1:
 			pipe = Create_pipe();
@@ -112,6 +131,9 @@ int main()
 			break;
 		case 6:
 			Print_nps_list(nps_list);
+			break;
+		case 7:			
+			Search_by_id(nps_list);
 			break;
 		}
 		if (variant != 8)
