@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <list>
 #include <vector>
+//vector,имя через пробел,передача по ссылке и значению, проверка ввода,сохранение и загрузка в из файла
 
 using namespace std;
 
@@ -32,43 +33,20 @@ void Print_menu() {
 	cout << "8. Exit" << endl;
 	cout << ">";
 }
-int get_variant(int count) {
-	int digit{ 0 };
-	cin >> digit;
-	if (cin.fail()) {
-		cin.clear();
-		cin.ignore();
-		cout << "Not num" << endl;
-	}
-	else {
-		cout << digit << endl;
-	}
-	return digit;
-}
 void Print_pipe(standart_of_pipe& s)
 {
-	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
-	cout << "+                                          +" << endl;
-	cout << "  id: " << s.id_pipe << "    " << "deametr: " << s.deametr_pipe << endl
-		<< "  dlina: " << s.long_pipe << "  gotovnost': " << s.ready_pipe << endl;
-	cout << "+                                          +" << endl;
-	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+	cout << "  id: " << s.id_pipe << "  |  " << "deametr: " << s.deametr_pipe << "  |  " << "  dlina: " << s.long_pipe << "  |  "
+		<< "  gotovnost': " << s.ready_pipe << endl;
 }
 void Print_nps(standart_of_nps n)
 {	
-	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
-	cout << "+                                          +" << endl;
-	cout << "  id: " << n.id_nps << "    " << "Name: " << n.name_nps << endl
-		<< "  gotovnost': " << n.ready_nps << endl;
-	cout << "+                                          +" << endl;
-	cout << "++++++++++++++++++++++++++++++++++++++++++++" << endl;
+	cout<<"  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "gotovnost': " << n.ready_nps << endl;
 }
 void Print_nps_list(list <standart_of_nps> nps_list)
 {	
-	for (int i = 0; i < nps_list.size();++i) 
+	for (auto& nps : nps_list) 
 	{
-		cout << i << endl;
-		//cout << nps_list[i].id_nps;
+		Print_nps(nps);
 	}
 }
 standart_of_nps Create_nps()
@@ -114,7 +92,7 @@ int main()
 	standart_of_nps nps;
 	do {
 		Print_menu();
-		variant = get_variant(5);
+		variant = get_variant();
 		switch (variant) {
 		case 1:
 			pipe = Create_pipe();
