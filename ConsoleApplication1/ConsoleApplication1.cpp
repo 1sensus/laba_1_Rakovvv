@@ -6,7 +6,25 @@
 #include <cstring>
 #include <string>
 
-
+/*ЛР 1
+Создать консольное приложение, описывающая базовые сущности трубопроводного транспорта 
+газа или нефти: труба и КС или НПС (в сильно упрощенном варианте).
+Свойства трубы: идентификатор, длина, диаметр, признак "в ремонте". 
+Свойства КС: идентификатор, название, количество цехов, количество цехов в работе,
+эффективность (некий показатель, обобщающий различные специфические характеристики)
+Для каждой структуры реализовать операции: считывание с консоли или из файла,
+вывод на консоль или в файл, редактирование признака "в ремонте" для трубы, запуск и останов цеха в КС,
+сохранение всей информации в файл, загрузка информации из файла.
+При запуске программы выводится меню, запрашивающее в бесконечном цикле действие
+от пользователя. 
+Пример меню: 1. Добавить трубу 2. Добавить КС 3. Просмотр всех объектов 4. Редактировать трубу 5. Редактировать КС 6. Сохранить 7. Загрузить 0. Выход
+Поддержка русского языка не обязательна.
+Обязательно: проверка корректности совершаемых действий.
+Программа должна быть устойчива к любым действиям пользователя.
+Повод для снижения балла: бессмысленное наименование переменных и функций, 
+необоснованное использование глобальных переменных, неструктурированный код.
+Ход выполнения работы фиксируется коммитами в github (с осмысленными комментариями).
+К ответу прикрепляется ссылка на финальный коммит! */
 
 //vector,имя через пробел,передача по ссылке и значению,
 //проверка ввода,сохранение и загрузка в из файла
@@ -23,7 +41,9 @@ typedef struct standart_of_nps
 {
 	int id_nps;
 	string name_nps;
-	bool ready_nps; 
+	double all_parts;
+	double warking_parts;
+	double kpd; 
 }standart_of_nps;
 int get_variant(int a)
 {
@@ -62,7 +82,8 @@ void Print_pipe(standart_of_pipe& s)
 }
 void Print_nps(standart_of_nps n)
 {	
-	cout<<"  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "gotovnost': " << n.ready_nps << endl;
+	cout<<"  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "efectivnost'': " << n.kpd
+		<< "%("<<n.warking_parts<<" / "<<n.all_parts<<")" << endl;
 }
 void Print_all_objects(vector <standart_of_nps> nps_vector,
 	vector<standart_of_pipe> pipe_vector)
@@ -117,8 +138,20 @@ standart_of_nps Create_nps(vector<standart_of_nps> nps_vector)
 	cout << "Vvedite imya nps";
 	cin.ignore();
 	getline(cin, n.name_nps);
-	cout << "Vvedite status nps";
-	cin >> n.ready_nps;
+	cout << "Vvedite kol-vo rabotaushih nps" << endl;
+	cin >> n.warking_parts;
+	cout << "Vvedite obshee kol-vo nps "<<endl;
+	cin >> n.all_parts;
+	while (n.all_parts < n.warking_parts)
+	{
+		cout << "Oshibka vvoda. Vvedite korrektnii dannii"<<endl;
+
+		cout << "Vvedite kol-vo rabotaushih nps" << endl;
+		cin >> n.warking_parts;
+		cout << "Vvedite obshee kol-vo nps " << endl;
+		cin >> n.all_parts;
+	}
+	n.kpd = n.warking_parts / n.all_parts * 100;
 	return n;
 }
 standart_of_pipe Create_pipe(vector<standart_of_pipe> pipe_vector)
@@ -154,8 +187,8 @@ void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 		if (nps.id_nps == search_id) 
 		{
 			 ++cheker;			
-			 cout << "Vvedite novi' status nps: " << endl;
-			 cin >> nps.ready_nps;
+			 cout << "Vvedite novoe kol-vo rabotaushih nps: " << endl;
+			 cin >> nps.warking_parts;
 			 break;
 		}
 	} if(cheker == 0)cout << "ID ne naiden";
