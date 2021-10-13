@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstring>
 #include <string>
+#pragma warning(disable : 4996)
 
 /*ЛР 1
 Создать консольное приложение, описывающая базовые сущности трубопроводного транспорта 
@@ -29,6 +30,7 @@
 //vector,имя через пробел,передача по ссылке и значению,
 //проверка ввода,сохранение и загрузка в из файла
 using namespace std;
+
 
 typedef struct standart_of_pipe
 {
@@ -213,6 +215,81 @@ void Chenge_status_search_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 	} if (cheker == 0)cout << "ID ne naiden";
 	else { cout << "Izmeneniya sohraneni'"; }
 }
+void file_nps(vector<standart_of_nps>& nps_vector)
+{	
+	fstream file_out;
+	file_out.open("Npss.txt", fstream::out);
+	if (!file_out.is_open())
+	{
+		cout << "Error!!!" << endl;
+	}
+	else
+	{
+		for (auto& nps : nps_vector)
+		{
+			file_out << nps.id_nps << "|" << nps.name_nps << "|"<<nps.kpd<<"|"<<endl;
+		}
+	}
+	file_out.close();
+}
+void file_pipe(vector<standart_of_pipe>& pipe_vector)
+{
+	fstream file_out;
+	file_out.open("Pipes.txt", fstream::out);
+	if (!file_out.is_open())
+	{
+		cout << "Error!!!" << endl;
+	}
+	else
+	{
+		for (auto& pipe : pipe_vector)
+		{
+			file_out << pipe.id_pipe << "|" << pipe.deametr_pipe << "|"
+				<< pipe.long_pipe << "|" << pipe.ready_pipe << "|"<<endl;
+		}
+	}
+	file_out.close();
+}
+/*void read_nps(vector <standart_of_nps>& nps_vector)
+{
+	standart_of_nps nps = {};
+	ifstream read_file;
+	read_file.open("Npss.txt");
+		if (!read_file.is_open()) { cout << "Error!!!"; }
+		else
+		{
+			string line;
+			cout << "opend"<<endl;
+			while (getline(read_file, line))
+			{
+				line.pop_back();
+				string token;
+				istringstream ss (line);
+				int counter = 0;
+				while (getline(ss,token,'|'))
+				{
+					switch (counter)
+					{
+					case 0:
+						nps.id_nps =stoi(token);
+						break;
+					case 1:
+						nps.name_nps = token;
+						break;
+					case 2:
+						nps.kpd =(stoi(token));
+						break;
+					default:
+						break;
+					}
+					++counter;					
+					nps_vector.push_back(nps);
+				}
+			}		
+		}
+	read_file.close();
+}
+*/
 int main()
 {	
 	vector < standart_of_nps > nps_vector = {};
@@ -247,20 +324,20 @@ int main()
 			break;
 		case 6:
 			{
-				fstream file_out;			
-				file_out.open("All_objects.txt",fstream::in | fstream::out);
-				if (!file_out.is_open()) 
-					{
-					cout << "Error!!!" << endl;
-					}
-				else
-				{
-					
-				}
-				file_out.close();
-				break;
+			cout << "1.Zapisat' pipes" << endl << "2.Zapisat' npss"<<endl;
+			int x;
+				cin >> x;
+			while ((x != 1) && (x != 2)) 
+			{
+				cout << "Vvedite correktni otvet";
 			}
-		case 7:			
+			if (x == 1) { file_pipe(pipe_vector); }
+			else { file_nps(nps_vector); }
+			
+			break;
+			}
+		case 7:
+			//read_nps(nps_vector);
 			break;
 		}
 		if (variant != 8)
