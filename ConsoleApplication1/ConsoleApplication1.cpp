@@ -5,7 +5,6 @@
 #include <fstream>
 #include <cstring>
 #include <string>
-#pragma warning(disable : 4996)
 
 /*ЛР 1
 Создать консольное приложение, описывающая базовые сущности трубопроводного транспорта 
@@ -84,8 +83,8 @@ void Print_pipe(standart_of_pipe& s)
 }
 void Print_nps(standart_of_nps n)
 {	
-	cout<<"  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "efectivnost'': " << n.kpd
-		<< "%("<<n.warking_parts<<" / "<<n.all_parts<<")" << endl;
+	cout << "  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "efectivnost'': " << n.kpd
+		<< " %(" << n.warking_parts << " / " << n.all_parts << ")" << endl;
 }
 void Print_all_objects(vector <standart_of_nps> nps_vector,
 	vector<standart_of_pipe> pipe_vector)
@@ -140,17 +139,17 @@ standart_of_nps Create_nps(vector<standart_of_nps> nps_vector)
 	cout << "Vvedite imya nps";
 	cin.ignore();
 	getline(cin, n.name_nps);
-	cout << "Vvedite kol-vo rabotaushih nps" << endl;
+	cout << "Vvedite kol-vo rabotaushih cehov" << endl;
 	cin >> n.warking_parts;
-	cout << "Vvedite obshee kol-vo nps "<<endl;
+	cout << "Vvedite obshee kol-vo cehov "<<endl;
 	cin >> n.all_parts;
 	while (n.all_parts < n.warking_parts)
 	{
 		cout << "Oshibka vvoda. Vvedite korrektnii dannii"<<endl;
 
-		cout << "Vvedite kol-vo rabotaushih nps" << endl;
+		cout << "Vvedite kol-vo rabotaushih cehov" << endl;
 		cin >> n.warking_parts;
-		cout << "Vvedite obshee kol-vo nps " << endl;
+		cout << "Vvedite obshee kol-vo cehov" << endl;
 		cin >> n.all_parts;
 	}
 	n.kpd = n.warking_parts / n.all_parts * 100;
@@ -189,8 +188,17 @@ void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 		if (nps.id_nps == search_id) 
 		{
 			 ++cheker;			
-			 cout << "Vvedite novoe kol-vo rabotaushih nps: " << endl;
+			 cout << "Vvedite novoe kol-vo rabotaushih cehov: " << endl;
 			 cin >> nps.warking_parts;
+			 while (nps.all_parts < nps.warking_parts)
+			 {			 
+
+				 cout << "Vvedite kol-vo rabotaushih cehov" << endl;
+				 cin >> nps.warking_parts;
+				 cout << "Vvedite obshee kol-vo cehov " << endl;
+				 cin >> nps.all_parts;
+			 }
+			 nps.kpd = nps.warking_parts / nps.all_parts * 100;
 			 break;
 		}
 	} if(cheker == 0)cout << "ID ne naiden";
@@ -227,7 +235,8 @@ void file_nps(vector<standart_of_nps>& nps_vector)
 	{
 		for (auto& nps : nps_vector)
 		{
-			file_out << nps.id_nps << "|" << nps.name_nps << "|"<<nps.kpd<<"|"<<endl;
+			file_out << nps.id_nps << "|" << nps.name_nps << "|"<<nps.kpd<<
+				"|"<<nps.warking_parts<<"|"<<nps.all_parts<<"|" << endl;
 		}
 	}
 	file_out.close();
@@ -250,7 +259,7 @@ void file_pipe(vector<standart_of_pipe>& pipe_vector)
 	}
 	file_out.close();
 }
-/*void read_nps(vector <standart_of_nps>& nps_vector)
+void read_nps(vector <standart_of_nps>& nps_vector)
 {
 	standart_of_nps nps = {};
 	ifstream read_file;
@@ -258,38 +267,57 @@ void file_pipe(vector<standart_of_pipe>& pipe_vector)
 		if (!read_file.is_open()) { cout << "Error!!!"; }
 		else
 		{
-			string line;
-			cout << "opend"<<endl;
-			while (getline(read_file, line))
+			string  part_of_line,id_s,name_s,kpd_s,works_s,all_s;
+			cout << "opened"<<endl;	
+			int i = 0;
+			while (!read_file.eof())
 			{
-				line.pop_back();
-				string token;
-				istringstream ss (line);
-				int counter = 0;
-				while (getline(ss,token,'|'))
-				{
-					switch (counter)
-					{
-					case 0:
-						nps.id_nps =stoi(token);
-						break;
-					case 1:
-						nps.name_nps = token;
-						break;
-					case 2:
-						nps.kpd =(stoi(token));
-						break;
-					default:
-						break;
-					}
-					++counter;					
-					nps_vector.push_back(nps);
-				}
-			}		
+				++i;
+				getline(read_file, part_of_line);
+				size_t _1st;
+				_1st= part_of_line.find('|');
+				id_s = part_of_line.substr(0,_1st);
+				part_of_line.erase(0, _1st+1);
+				_1st = part_of_line.find('|');
+				nps.name_nps= part_of_line.substr(0, _1st);
+				part_of_line.erase(0, _1st + 1);
+				_1st = part_of_line.find('|');
+				kpd_s = part_of_line.substr(0, _1st);
+				part_of_line.erase(0, _1st + 1);
+				_1st = part_of_line.find('|');
+				works_s = part_of_line.substr(0, _1st);
+				part_of_line.erase(0, _1st + 1);
+				_1st = part_of_line.find('|');
+				all_s = part_of_line.substr(0, _1st);
+				part_of_line.erase(0, _1st + 1);
+
+				nps.id_nps = stoi(id_s);
+				nps.kpd = atof(kpd_s.c_str());
+				nps.warking_parts = atof(works_s.c_str());
+				nps.all_parts = atof(all_s.c_str());
+				nps_vector.push_back(nps);
+
+				/*_2nd = part_of_line.find('|');
+				name_s = part_of_line.substr(_1st,_2nd);
+				part_of_line.erase(_2nd);
+				_1st = part_of_line.find('|');
+				kpd_s = part_of_line.substr(0, _1st);
+				part_of_line.erase(0, _1st+1);
+				nps.id_nps = stoi(id_s);
+				nps.name_nps = name_s;
+				nps.kpd = atof(kpd_s.c_str());
+				nps_vector.push_back(nps);*/										
+			}
 		}
 	read_file.close();
+	/*	
+	nps.id_nps = stoi(part_of_line);
+	nps.name_nps = part_of_line;
+	nps.kpd = atof(part_of_line.c_str())
+	nps_vector.push_back(nps);;
+	*/
 }
-*/
+
 int main()
 {	
 	vector < standart_of_nps > nps_vector = {};
@@ -337,7 +365,7 @@ int main()
 			break;
 			}
 		case 7:
-			//read_nps(nps_vector);
+			read_nps(nps_vector);
 			break;
 		}
 		if (variant != 8)
