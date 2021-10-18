@@ -88,16 +88,16 @@ void Print_nps(standart_of_nps n)
 }
 void Print_all_objects(vector <standart_of_nps> nps_vector,
 	vector<standart_of_pipe> pipe_vector)
-{
-	cout << "Npss: " << endl;
-	for (auto& nps : nps_vector)
-	{
-		Print_nps(nps);
-	}
+{	
 	cout << "Pipes: " << endl;
 	for (auto& pipe : pipe_vector)
 	{
 		Print_pipe(pipe);
+	}
+	cout << "Npss: " << endl;
+	for (auto& nps : nps_vector)
+	{
+		Print_nps(nps);
 	}
 }
 int Cheke_ID_pipe(int s_id, vector<standart_of_pipe> pipe_vector)
@@ -244,7 +244,7 @@ void file_outer(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>&
 		}
 		for (auto& nps : nps_vector)
 		{
-			file_out << nps.id_nps << endl << nps.name_nps << endl << nps.warking_parts << endl << nps.all_parts << endl << nps.kpd;
+			file_out << nps.id_nps << endl << nps.name_nps << endl << nps.warking_parts << endl << nps.all_parts << endl << nps.kpd<<endl;
 		}
 		cout << "writen";
 
@@ -264,45 +264,34 @@ void read_file(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>& 
 		int kol_vo_npss;
 		read_file >> kol_vo_pipes;
 		read_file >> kol_vo_npss;
-		while (!read_file.eof()) 
+		while (!read_file.eof())
 		{
-			if (kol_vo_pipes != 0) 
-			{				
-					cout << "pipe"<<kol_vo_pipes << endl;
-					standart_of_pipe pipe = {};
-					read_file >> pipe.id_pipe;
-					cout << pipe.id_pipe << endl;
-					read_file >> pipe.deametr_pipe;
-					cout << pipe.deametr_pipe << endl;
-					read_file >> pipe.long_pipe;
-					cout << pipe.long_pipe << endl;
-					read_file >> pipe.ready_pipe;
-					cout << pipe.ready_pipe << endl;
-					pipe_vector.push_back(pipe);
-					kol_vo_pipes--;
-				
+			if (kol_vo_pipes != 0)
+			{
+				standart_of_pipe pipe = {};
+				read_file >> pipe.id_pipe;
+				read_file >> pipe.deametr_pipe;
+				read_file >> pipe.long_pipe;
+				read_file >> pipe.ready_pipe;
+				pipe_vector.push_back(pipe);
+				kol_vo_pipes--;
+
 			}
 			else if (kol_vo_npss != 0)
-			{	
-					cout << "nps " << kol_vo_npss << endl;
-					standart_of_nps nps = {};
-					read_file >> nps.id_nps;
-					cout << nps.id_nps << endl;
-					read_file.ignore();
-					getline(read_file, nps.name_nps);
-					cout << nps.name_nps << endl;
-					read_file >> nps.warking_parts;
-					cout << nps.warking_parts << endl;
-					read_file >> nps.all_parts;
-					cout << nps.all_parts << endl;
-					read_file >> nps.kpd;
-					cout << nps.kpd << endl;
-					nps_vector.push_back(nps);
-					kol_vo_npss--;
+			{
+				standart_of_nps nps = {};
+				read_file >> nps.id_nps;
+				read_file.ignore();
+				getline(read_file, nps.name_nps);
+				read_file >> nps.warking_parts;
+				read_file >> nps.all_parts;
+				read_file >> nps.kpd;
+				nps_vector.push_back(nps);
+				kol_vo_npss--;
 			}
 			else { break; }
 		}read_file.close();
-	}
+	}cout << "file read" << endl;
 }
 
 int main()
