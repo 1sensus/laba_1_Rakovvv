@@ -233,15 +233,20 @@ void file_outer(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>&
 	}
 	else
 	{
+		int a = size(pipe_vector);
+		int b = size(nps_vector);
+		file_out << a<<endl;
+		file_out << b << endl;
+
 		for (auto& pipe : pipe_vector)
 		{
-			file_out << pipe.id_pipe << endl << pipe.deametr_pipe << endl << pipe.long_pipe << endl << pipe.ready_pipe << endl;
+			file_out<< pipe.id_pipe << endl << pipe.deametr_pipe << endl << pipe.long_pipe << endl << pipe.ready_pipe << endl;
 		}
-		file_out << "/" << endl;
 		for (auto& nps : nps_vector)
 		{
 			file_out << nps.id_nps << endl << nps.name_nps << endl << nps.warking_parts << endl << nps.all_parts << endl << nps.kpd;
 		}
+		cout << "writen";
 
 	}
 	file_out.close();
@@ -249,35 +254,55 @@ void file_outer(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>&
 
 void read_file(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>& nps_vector)
 {
-	standart_of_pipe pipe = {};
-	standart_of_nps nps = {};
+
 	ifstream read_file;
 	read_file.open("All.txt", ifstream::in);
 	if (!read_file.is_open()) { cout << "Error!!!"; }
 	else
 	{
-		bool delimitr = false;
-		while (!read_file.eof()) {
-
-			if (delimitr == false)
-			{
-				read_file >> pipe.id_pipe;
-				read_file >> pipe.deametr_pipe;
-				read_file >> pipe.long_pipe;
-				read_file >> pipe.ready_pipe;
-				pipe_vector.push_back(pipe);
+		int kol_vo_pipes;
+		int kol_vo_npss;
+		read_file >> kol_vo_pipes;
+		read_file >> kol_vo_npss;
+		while (!read_file.eof()) 
+		{
+			if (kol_vo_pipes != 0) 
+			{				
+					cout << "pipe"<<kol_vo_pipes << endl;
+					standart_of_pipe pipe = {};
+					read_file >> pipe.id_pipe;
+					cout << pipe.id_pipe << endl;
+					read_file >> pipe.deametr_pipe;
+					cout << pipe.deametr_pipe << endl;
+					read_file >> pipe.long_pipe;
+					cout << pipe.long_pipe << endl;
+					read_file >> pipe.ready_pipe;
+					cout << pipe.ready_pipe << endl;
+					pipe_vector.push_back(pipe);
+					kol_vo_pipes--;
+				
 			}
-			else {
-				read_file >> nps.id_nps;
-				read_file >> nps.name_nps;
-				read_file >> nps.warking_parts;
-				read_file >> nps.all_parts;
-				read_file >> nps.kpd;
-				nps_vector.push_back(nps);
+			else if (kol_vo_npss != 0)
+			{	
+					cout << "nps " << kol_vo_npss << endl;
+					standart_of_nps nps = {};
+					read_file >> nps.id_nps;
+					cout << nps.id_nps << endl;
+					read_file.ignore();
+					getline(read_file, nps.name_nps);
+					cout << nps.name_nps << endl;
+					read_file >> nps.warking_parts;
+					cout << nps.warking_parts << endl;
+					read_file >> nps.all_parts;
+					cout << nps.all_parts << endl;
+					read_file >> nps.kpd;
+					cout << nps.kpd << endl;
+					nps_vector.push_back(nps);
+					kol_vo_npss--;
 			}
-		}
+			else { break; }
+		}read_file.close();
 	}
-	read_file.close();
 }
 
 int main()
