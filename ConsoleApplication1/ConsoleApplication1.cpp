@@ -5,6 +5,7 @@
 #include <fstream>
 #include <cstring>
 #include <string>
+#include<algorithm>
 
 /*
 https://github.com/papilinatm/cpp_lessons_2020/blob/master/cpp_lessons/main.cpp
@@ -23,8 +24,6 @@ b) —: по названию, по проценту незадействованных цехов;
 (убрать излишнее дублирование кода, кажда€ функци€ выполн€ет небольшое, логически законченное действие).
 ѕродемонстрировать умение и понимание работы с классами, ссылками, потоками ввода/вывода.*/
 using namespace std;
-
-
 struct standart_of_pipe
 {
 	int id_pipe;
@@ -91,7 +90,7 @@ void Print_pipe(const standart_of_pipe& s)
 }
 void Print_nps(const standart_of_nps& n)
 {
-	cout << "  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "zanyatost': " << n.kpd
+	cout << "  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "zagrughennost': " << n.kpd
 		<< " %(" << n.working_parts << " / " << n.all_parts << ")" << endl;
 }
 void Print_all_objects(const vector <standart_of_nps>& nps_vector, const	vector<standart_of_pipe>& pipe_vector)
@@ -125,9 +124,13 @@ standart_of_nps Create_nps(int nps_id)
 {
 	standart_of_nps n = {};
 	n.id_nps = nps_id;
-	cout << "Vvedite imya nps";
+	cout << "Vvedite imya nps"<<endl;
 	cin.ignore();
 	getline(cin, n.name_nps);
+	while (n.name_nps == "") {
+		cout<<"VbI ne vveli imya"<<endl;
+		getline(cin, n.name_nps);
+	}
 	cout << "Vvedite kol-vo rabotaushih cehov" << endl;
 	cin >> n.working_parts;
 	cout << "Vvedite obshee kol-vo cehov " << endl;
@@ -159,7 +162,7 @@ standart_of_pipe Create_pipe(int pipe_id)
 void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 {
 	int search_id;
-	bool check;
+	bool check = false;
 	auto i = 0;
 	cout << "Vvedite ID" << endl;
 	cin >> search_id;
@@ -169,7 +172,7 @@ void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 		if (nps.id_nps == search_id)
 		{
 			check = true;
-			cout << "Vvedite novoe kol-vo rabotaushih cehov: " << endl;
+			cout << "Vvedite novoe kol-vo rabotaushih cehov " << endl;
 			cin >> nps.working_parts;
 			while (nps.all_parts < nps.working_parts)
 			{
@@ -188,7 +191,7 @@ void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 void Chenge_status_search_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 {
 	int search_id;
-	bool check;
+	bool check = false;
 	auto i = 0;
 	cout << "Vvedite ID" << endl;
 	cin >> search_id;
@@ -227,7 +230,7 @@ void file_outer(const vector <standart_of_pipe>& pipe_vector, const vector<stand
 		{
 			file_out << nps.id_nps << endl << nps.name_nps << endl << nps.working_parts << endl << nps.all_parts << endl << nps.kpd << endl;
 		}
-		cout << "writen";
+		cout << "writen"<<endl;
 
 	}
 	file_out.close();
@@ -272,27 +275,40 @@ void read_file(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>& 
 		}read_file.close();
 	}cout << "file read" << endl;
 }
-int Search_by_name_nps(vector<standart_of_nps>nps_vector, string name)
+int Search_by_name_nps(vector<standart_of_nps>& nps_vector, string name)
 {
+	int i = 0;
 	for (auto nps : nps_vector)
 	{
-		if (nps.name_nps == name)
-			return nps.id_nps;
-	}
+		++i;
+		if (nps.name_nps == name) { return i-1; }
+	}return -1;
 }
 void Delete_elem(vector<standart_of_nps>& nps_vector)
 {
-	string name_of_nps;
-	cout << "Vvedite imya trubi" << endl;
-	getline(cin, name_of_nps);
-	try
-	{
+	if (nps_vector.size() == 0) { cout << "Error!!!Spisok pust" << endl; }
+	else {
+		string name_of_nps;
+		cout << "Vvedite imya elemeta" << endl;
+		cin.ignore();
+		getline(cin, name_of_nps);
 		int id_of_delete_element = Search_by_name_nps(nps_vector, name_of_nps);
-		nps_vector.erase(nps_vector.begin() + id_of_delete_element);
+		if (id_of_delete_element == -1){ cout << "Error!!!" << endl;}
+		else 
+		{ nps_vector.erase(nps_vector.begin() + id_of_delete_element);
+		cout <<"Deleted!"<<endl <<"Razmer spiska: " << nps_vector.size()<< endl;
+		}
 	}
-	catch (int a) { cout << "Imya ne naideno" << endl; }
 }
-
+int Id_arr(vector <standart_of_nps> nps_vector) 
+{
+	int i = 0;
+	for (auto nps : nps_vector)
+	{
+		if (nps.id_nps!= i) { return i; }
+		++i;
+	}
+}
 
 int main()
 {
@@ -309,6 +325,7 @@ int main()
 		switch (variant) {
 		case 1:
 		{
+			pipe_counter = pipe_vector.size();
 			auto pipe = Create_pipe(pipe_counter);
 			if (pipe.diameter_pipe == 0 || pipe.long_pipe == 0) { cout << " !!Error input,retry!!"; break; }
 			pipe_vector.push_back(pipe);
@@ -317,6 +334,9 @@ int main()
 		}
 		case 2:
 		{
+
+			nps_counter = Id_arr(nps_vector);
+			if (nps_vector.size() + 2 < nps_counter) { nps_counter = nps_vector.size(); }
 			auto nps = Create_nps(nps_counter);
 			if (nps.all_parts == 0) { cout << " !!Error input,retry!!"; break; }
 			nps_vector.push_back(nps);
@@ -325,6 +345,10 @@ int main()
 		}
 		case 3:
 		{
+			sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
+			{
+				return nps1.id_nps < nps2.id_nps;
+			});			
 			cout << "List of all objects" << endl;
 			Print_all_objects(nps_vector, pipe_vector);
 			break;
@@ -354,10 +378,11 @@ int main()
 		}
 		case 8:
 		{
-			cout << "Delete" << endl;
+			cout << "Delete:" << endl;
 			Delete_elem(nps_vector);
+			break;
 		}
-			case 9:
+		case 9:
 			{
 				int variant2;
 				do {
