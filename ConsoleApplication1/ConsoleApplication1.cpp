@@ -63,12 +63,13 @@ void Print_menu() {
 	cout << "1. Add pipe" << endl;
 	cout << "2. Add nps" << endl;
 	cout << "3. Print all objects" << endl;
-	cout << "4. Change status pipe" << endl;
-	cout << "5. Change status nps" << endl;
+	cout << "4. Change pipe" << endl;
+	cout << "5. Change nps" << endl;
 	cout << "6. Save in file" << endl;
 	cout << "7. Load from file" << endl;
-	cout << "8. Delete nps by name " << endl;
-	cout << "9. Search by filter" << endl;
+	cout << "8. Delete nps " << endl;
+	cout << "9. Delete pipe " << endl;
+	cout << "10. Search by filter" << endl;
 	cout << "0. Exit" << endl;
 }
 void Print_menu_for_filter()
@@ -159,12 +160,11 @@ standart_of_pipe Create_pipe(int pipe_id)
 	cin >> s.ready_pipe;
 	return s;
 }
-void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
+void Chenge_by_id_nps(vector <standart_of_nps>& nps_vector)
 {
 	int search_id;
 	bool check = false;
 	auto i = 0;
-	cout << "Vvedite ID" << endl;
 	cin >> search_id;
 	for (auto& nps : nps_vector)
 	{
@@ -172,28 +172,53 @@ void Chenge_status_search_by_id_nps(vector <standart_of_nps>& nps_vector)
 		if (nps.id_nps == search_id)
 		{
 			check = true;
-			cout << "Vvedite novoe kol-vo rabotaushih cehov " << endl;
-			cin >> nps.working_parts;
-			while (nps.all_parts < nps.working_parts)
-			{
+			cout << "Chto izmenit'?" << endl;
+			int variant;
+			do {
+				system("cls");
+				
+				cout << "Izmenyaem nps s Id: " <<search_id<<endl ;
+				cout << "1.Kol-vo rabotauhsih" << endl;
+				cout << "2.Imya" << endl;
+				cout << "0.Exit" << endl;
+				variant = get_variant();
+				switch (variant) {
+				case 1: 
+					{
+							cin >> nps.working_parts;
+							while (nps.all_parts < nps.working_parts)
+							{
 
-				cout << "Vvedite kol-vo rabotaushih cehov" << endl;
-				cin >> nps.working_parts;
-				cout << "Vvedite obshee kol-vo cehov " << endl;
-				cin >> nps.all_parts;
-			}
-			nps.kpd = nps.working_parts / nps.all_parts * 100;
-			break;
+								cout << "Vvedite kol-vo rabotaushih cehov" << endl;
+								cin >> nps.working_parts;
+								cout << "Vvedite obshee kol-vo cehov " << endl;
+								cin >> nps.all_parts;
+							}
+							nps.kpd = nps.working_parts / nps.all_parts * 100;
+							break;
+					}
+				case 2:
+					{
+						cout << "Vvediter novoe imya" << endl;
+						cin.ignore();
+						getline(cin, nps.name_nps);
+						while (nps.name_nps == "") {
+							cout << "VbI ne vveli imya" << endl;
+							getline(cin, nps.name_nps);
+						}
+						break;
+					}
+				}if (variant != 0)system("pause");
+			} while (variant != 0);
 		}
 	} if (check == false)cout << "ID ne naiden";
 	else { cout << "Izmeneniya sohraneni'"; }
 }
-void Chenge_status_search_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
+void Chenge_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 {
 	int search_id;
 	bool check = false;
-	auto i = 0;
-	cout << "Vvedite ID" << endl;
+	auto i = 0;	
 	cin >> search_id;
 	for (auto& pipe : pipe_vector)
 	{
@@ -201,8 +226,50 @@ void Chenge_status_search_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 		if (pipe.id_pipe == search_id)
 		{
 			check = true;
-			cout << "Vvedite novi' status: " << endl;
-			cin >> pipe.ready_pipe;
+			int variant;
+			do {
+				system("cls");
+
+				cout << "Izmenyaem pipe s Id: " << search_id << endl;
+				cout << "1.Dliny" << endl;
+				cout << "2.Diameter" << endl;
+				cout << "3.Status" << endl;
+				cout << "0.Exit" << endl;
+				variant = get_variant();
+				switch (variant) {
+				case 1:					
+				{	
+					Print_pipe(pipe);
+					cout << "Vvedite dliny";
+					cin >> pipe.long_pipe;
+					while (pipe.long_pipe == 0) { cout << "VbI ne vveli dlinny" << endl; cin >> pipe.long_pipe;}
+					cout << "Novaya truba:" << endl;
+					Print_pipe(pipe);
+					break;
+				}
+				case 2:
+				{
+					Print_pipe(pipe);
+					cout << "Vvediter diametr" << endl;
+					cin >> pipe.diameter_pipe;
+					while (pipe.diameter_pipe == 0) {
+						cout << "VbI ne vveli diameter" << endl; cin >> pipe.diameter_pipe;}
+					cout << "Novaya truba:" << endl;
+					Print_pipe(pipe);
+					break;
+
+				}
+				case 3:
+				{
+					Print_pipe(pipe);
+					cout << "Vvedite noviy status" << endl;
+					cin >> pipe.ready_pipe;
+					cout << "Novaya truba:" << endl;
+					Print_pipe(pipe);
+					break;
+				}
+				}if (variant != 0)system("pause");
+			} while (variant != 0);
 		}
 	} if (check == false)cout << "ID ne naiden";
 	else { cout << "Izmeneniya sohraneni'"; }
@@ -284,21 +351,68 @@ int Search_by_name_nps(vector<standart_of_nps>& nps_vector, string name)
 		if (nps.name_nps == name) { return i-1; }
 	}return -1;
 }
-void Delete_elem(vector<standart_of_nps>& nps_vector)
+void Delete_nps(vector<standart_of_nps>& nps_vector)
 {
 	if (nps_vector.size() == 0) { cout << "Error!!!Spisok pust" << endl; }
 	else {
-		string name_of_nps;
-		cout << "Vvedite imya elemeta" << endl;
-		cin.ignore();
-		getline(cin, name_of_nps);
-		int id_of_delete_element = Search_by_name_nps(nps_vector, name_of_nps);
-		if (id_of_delete_element == -1){ cout << "Error!!!" << endl;}
-		else 
-		{ nps_vector.erase(nps_vector.begin() + id_of_delete_element);
-		cout <<"Deleted!"<<endl <<"Razmer spiska: " << nps_vector.size()<< endl;
-		}
+		int variant;
+		do
+		{
+			system("cls");
+			cout <<"Delete:"<<endl<< "1.By name"<<endl<<"2.By ID"<<endl<<"0.Exit"<<endl ;
+			variant = get_variant();
+			switch (variant) 
+			{
+			case 1: 
+				{
+					string name_of_nps;
+					cout << "Vvedite imya elemeta" << endl;
+					cin.ignore();
+					getline(cin, name_of_nps);
+					int id_of_delete_element = Search_by_name_nps(nps_vector, name_of_nps);
+					if (id_of_delete_element == -1) { cout << "Error!!!" << endl; }
+					else
+					{
+						nps_vector.erase(nps_vector.begin() + id_of_delete_element);
+						cout << "Deleted!" << endl << "Razmer spiska: " << nps_vector.size() << endl;
+					}
+					break;
+				}
+			case 2:
+				{
+					int search_id;
+					cout << "Vvedite ID" << endl;
+					cin >> search_id;
+					while (nps_vector.size() < search_id)
+					{
+						cout << "Takogo Id ne sushestvuet" << endl;
+						cin >> search_id;
+					}
+					nps_vector.erase(nps_vector.begin()+search_id);
+					cout << "Deleted!" << endl << "Razmer spiska: " << nps_vector.size() << endl;
+					break;
+				}
+			}if (variant != 0)system("pause");
+		} while (variant != 0);
 	}
+}
+void Delete_pipe(vector<standart_of_pipe>& pipe_vector)
+{
+	if (pipe_vector.size() == 0) { cout << "Error!!!Spisok pust" << endl; }
+	else {
+		cout << "Vvedite ID" << endl;
+		int search_id;
+		cin >> search_id;
+		while(pipe_vector.size()< search_id)
+		{
+			cout << "Takogo Id ne sushestvuet" << endl;
+			cin >> search_id;
+		}
+		pipe_vector.erase(pipe_vector.begin() + search_id);
+		cout << "Deleted!" << endl << "Razmer spiska: " << pipe_vector.size() << endl;	
+
+	}
+
 }
 int Id_arr(vector <standart_of_nps> nps_vector) 
 {
@@ -306,6 +420,15 @@ int Id_arr(vector <standart_of_nps> nps_vector)
 	for (auto nps : nps_vector)
 	{
 		if (nps.id_nps!= i) { return i; }
+		++i;
+	}
+}
+int Id_arr(vector <standart_of_pipe> pipe_vector)
+{
+	int i = 0;
+	for (auto pipe : pipe_vector)
+	{
+		if (pipe.id_pipe != i) { return i; }
 		++i;
 	}
 }
@@ -325,7 +448,8 @@ int main()
 		switch (variant) {
 		case 1:
 		{
-			pipe_counter = pipe_vector.size();
+			pipe_counter = Id_arr(pipe_vector);
+			if (pipe_vector.size() + 2 < nps_counter) { nps_counter = pipe_vector.size(); }
 			auto pipe = Create_pipe(pipe_counter);
 			if (pipe.diameter_pipe == 0 || pipe.long_pipe == 0) { cout << " !!Error input,retry!!"; break; }
 			pipe_vector.push_back(pipe);
@@ -348,7 +472,11 @@ int main()
 			sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
 			{
 				return nps1.id_nps < nps2.id_nps;
-			});			
+			});	
+			sort(pipe_vector.begin(), pipe_vector.end(), [](const standart_of_pipe& pipe1, const standart_of_pipe& pipe2)
+			{
+				return pipe1.id_pipe < pipe2.id_pipe;
+			});
 			cout << "List of all objects" << endl;
 			Print_all_objects(nps_vector, pipe_vector);
 			break;
@@ -356,13 +484,13 @@ int main()
 		case 4:
 		{
 			cout << "Vvedite ID trubi', kotoryu hotite izmenit'" << endl;
-			Chenge_status_search_by_id_pipe(pipe_vector);
+			Chenge_by_id_pipe(pipe_vector);
 			break;
 		}
 		case 5:
 		{
 			cout << "Vvedite ID nps, kotoryu hotite izmenit'" << endl;
-			Chenge_status_search_by_id_nps(nps_vector);
+			Chenge_by_id_nps(nps_vector);
 			break;
 		}
 		case 6:
@@ -378,11 +506,16 @@ int main()
 		}
 		case 8:
 		{
-			cout << "Delete:" << endl;
-			Delete_elem(nps_vector);
+			Delete_nps(nps_vector);
 			break;
 		}
 		case 9:
+		{
+			cout << "Delete:" << endl;
+			Delete_pipe(pipe_vector);
+			break;
+		}
+		case 10:
 			{
 				int variant2;
 				do {
