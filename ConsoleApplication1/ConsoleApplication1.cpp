@@ -69,29 +69,29 @@ void Print_menu() {
 	cout << "7. Load from file" << endl;
 	cout << "8. Delete nps " << endl;
 	cout << "9. Delete pipe " << endl;
-	cout << "10. Search by filter" << endl;
+	cout << "10. Filters" << endl;
 	cout << "0. Exit" << endl;
 }
 void Print_menu_for_filter()
 {
 	system("cls");
 	cout << "Searching by filter" << endl;
-	cout << "1." << endl;
-	cout << "2." << endl;
-	cout << "3." << endl;
-	cout << "4." << endl;
+	cout << "1.Vozrastanie" << endl;
+	cout << "2.Ubivanie" << endl;
+	cout << "3.Nps po imeny" << endl;
+	cout << "4.KPD" << endl;
 	cout << "5." << endl;
 	cout << "0. Back" << endl;
 
 }
 void Print_pipe(const standart_of_pipe& s)
 {
-	cout << "  id: " << s.id_pipe << "  |  " << "deametr: " << s.diameter_pipe << "  |  " << "  dlina: " << s.long_pipe << "  |  "
+	cout << "  id: " << s.id_pipe << " \t |  " << "deametr: " << s.diameter_pipe << "\t  |  " << "dlina: " << s.long_pipe << " \t |  "
 		<< "  gotovnost': " << s.ready_pipe << endl;
 }
 void Print_nps(const standart_of_nps& n)
 {
-	cout << "  id: " << n.id_nps << "  |  " << "Name: " << n.name_nps << "  |  " << "zagrughennost': " << n.kpd
+	cout << "  id: " << n.id_nps << " \t |  " << "Name: " << n.name_nps << "\t  |  " << "zagrughennost': " << n.kpd
 		<< " %(" << n.working_parts << " / " << n.all_parts << ")" << endl;
 }
 void Print_all_objects(const vector <standart_of_nps>& nps_vector, const	vector<standart_of_pipe>& pipe_vector)
@@ -381,6 +381,7 @@ void Delete_nps(vector<standart_of_nps>& nps_vector)
 			case 2:
 				{
 					int search_id;
+					int i = -1;
 					cout << "Vvedite ID" << endl;
 					cin >> search_id;
 					while (nps_vector.size() < search_id)
@@ -388,8 +389,14 @@ void Delete_nps(vector<standart_of_nps>& nps_vector)
 						cout << "Takogo Id ne sushestvuet" << endl;
 						cin >> search_id;
 					}
-					nps_vector.erase(nps_vector.begin()+search_id);
-					cout << "Deleted!" << endl << "Razmer spiska: " << nps_vector.size() << endl;
+					for (auto nps : nps_vector)
+					{
+						++i;
+						if (nps.id_nps == search_id) {
+							nps_vector.erase(nps_vector.begin() + i);
+							cout << "Deleted!" << endl << "Razmer spiska: " << nps_vector.size() << endl; break;
+						}
+					}
 					break;
 				}
 			}if (variant != 0)system("pause");
@@ -402,17 +409,22 @@ void Delete_pipe(vector<standart_of_pipe>& pipe_vector)
 	else {
 		cout << "Vvedite ID" << endl;
 		int search_id;
+		int i = -1;
 		cin >> search_id;
 		while(pipe_vector.size()< search_id)
 		{
 			cout << "Takogo Id ne sushestvuet" << endl;
 			cin >> search_id;
 		}
-		pipe_vector.erase(pipe_vector.begin() + search_id);
-		cout << "Deleted!" << endl << "Razmer spiska: " << pipe_vector.size() << endl;	
-
+		for (auto pipe : pipe_vector)
+		{
+			++i;
+			if (pipe.id_pipe == search_id) {
+				pipe_vector.erase(pipe_vector.begin() + i);
+				cout << "Deleted!" << endl << "Razmer spiska: " << pipe_vector.size() << endl; break;
+			}
+		}
 	}
-
 }
 int Id_arr(vector <standart_of_nps> nps_vector) 
 {
@@ -432,12 +444,10 @@ int Id_arr(vector <standart_of_pipe> pipe_vector)
 		++i;
 	}
 }
-
 int main()
 {
 	vector < standart_of_nps > nps_vector = {};
 	vector <standart_of_pipe> pipe_vector = {};
-
 	int pipe_counter = 0;
 	int nps_counter = 0;
 	int variant;
@@ -469,14 +479,7 @@ int main()
 		}
 		case 3:
 		{
-			sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
-			{
-				return nps1.id_nps < nps2.id_nps;
-			});	
-			sort(pipe_vector.begin(), pipe_vector.end(), [](const standart_of_pipe& pipe1, const standart_of_pipe& pipe2)
-			{
-				return pipe1.id_pipe < pipe2.id_pipe;
-			});
+			
 			cout << "List of all objects" << endl;
 			Print_all_objects(nps_vector, pipe_vector);
 			break;
@@ -525,12 +528,47 @@ int main()
 						{
 							case 1:
 							{
-								cout << "1" << endl;
+								sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
+								{
+									return nps1.id_nps < nps2.id_nps;
+								});
+								sort(pipe_vector.begin(), pipe_vector.end(), [](const standart_of_pipe& pipe1, const standart_of_pipe& pipe2)
+								{
+									return pipe1.id_pipe < pipe2.id_pipe;
+								});
+								cout << "Otsortirovano +" << endl;
 								break;
 							}				
 							case 2:
+							{	sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
+								{
+								return nps1.id_nps > nps2.id_nps;
+								});
+								sort(pipe_vector.begin(), pipe_vector.end(), [](const standart_of_pipe& pipe1, const standart_of_pipe& pipe2)
+								{
+									return pipe1.id_pipe > pipe2.id_pipe;
+								});
+								cout << "Otsortirovano -" << endl;
+								break;
+							}
+							case 3:
 							{
-								cout << "2" << endl;
+								cout << "Kak sortirovat'?" << endl << "1.+" << endl << "2.-"<<endl;
+								int x = get_variant();
+								sort(nps_vector.begin(), nps_vector.end(), [&x](const standart_of_nps& nps1, const standart_of_nps& nps2)
+								{
+									if (x == 1)
+										return nps1.name_nps < nps2.name_nps;
+									else if (x == 2) { return nps1.name_nps > nps2.name_nps; }									
+								});
+								break;
+							}
+							case 4:
+							{								
+								sort(nps_vector.begin(), nps_vector.end(), [](const standart_of_nps& nps1, const standart_of_nps& nps2)
+								{
+									return nps1.kpd > nps2.kpd ;
+								});
 								break;
 							}
 
@@ -542,4 +580,3 @@ int main()
 		if (variant != 0)system("pause");
 	} while (variant != 0);
 }
-
