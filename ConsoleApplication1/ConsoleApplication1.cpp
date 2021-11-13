@@ -42,7 +42,7 @@ struct standart_of_nps
 int get_variant()
 {
 	int number;
-	while (1)
+	while (true)
 	{
 		cin >> number;
 		if (cin.fail())
@@ -160,11 +160,13 @@ standart_of_pipe Create_pipe(int pipe_id)
 	cin >> s.ready_pipe;
 	return s;
 }
-void Chenge_by_id_nps(vector <standart_of_nps>& nps_vector)
+void Change_by_id_nps(vector <standart_of_nps>& nps_vector)
 {
 	int search_id;
 	bool check = false;
 	auto i = 0;
+	cin.ignore();
+	cout << "Vvedite id nps" << endl;
 	cin >> search_id;
 	for (auto& nps : nps_vector)
 	{
@@ -175,8 +177,7 @@ void Chenge_by_id_nps(vector <standart_of_nps>& nps_vector)
 			cout << "Chto izmenit'?" << endl;
 			int variant;
 			do {
-				system("cls");
-				
+				system("cls");				
 				cout << "Izmenyaem nps s Id: " <<search_id<<endl ;
 				cout << "1.Kol-vo rabotauhsih" << endl;
 				cout << "2.Imya" << endl;
@@ -277,7 +278,13 @@ void Chenge_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 void file_outer(const vector <standart_of_pipe>& pipe_vector, const vector<standart_of_nps>& nps_vector)
 {
 	fstream file_out;
-	file_out.open("All.txt", fstream::out);
+	cout<<"Vvedite nazvanie faila dlya sohraneniya"<<endl;
+	string file;	
+	cin.ignore();
+	getline(cin, file);
+	size_t cheke = file.find(".txt");
+	if (cheke == -1) file += ".txt";
+	file_out.open(file, fstream::out);
 	if (!file_out.is_open())
 	{
 		cout << "Error!!!" << endl;
@@ -288,7 +295,6 @@ void file_outer(const vector <standart_of_pipe>& pipe_vector, const vector<stand
 		size_t b = size(nps_vector);
 		file_out << a << endl;
 		file_out << b << endl;
-
 		for (auto& pipe : pipe_vector)
 		{
 			file_out << pipe.id_pipe << endl << pipe.diameter_pipe << endl << pipe.long_pipe << endl << pipe.ready_pipe << endl;
@@ -306,14 +312,19 @@ void read_file(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>& 
 {
 
 	ifstream read_file;
-	read_file.open("All.txt", ifstream::in);
+	cout << "Vvedite nazvanie faila dlya chtenia" << endl;
+	string file;
+	cin.ignore();
+	getline(cin, file);
+	size_t cheke = file.find(".txt");
+	if (cheke == -1) file += ".txt";
+	read_file.open(file, ifstream::in);
 	if (!read_file.is_open()) { cout << "Error!!!"; }
 	else
 	{
 		pipe_vector.clear();
 		nps_vector.clear();
-		int kol_vo_pipes;
-		int kol_vo_npss;
+		int kol_vo_pipes, kol_vo_npss;
 		read_file >> kol_vo_pipes;
 		read_file >> kol_vo_npss;
 		while (!read_file.eof())
@@ -339,8 +350,8 @@ void read_file(vector <standart_of_pipe>& pipe_vector, vector<standart_of_nps>& 
 				read_file >> nps.kpd;
 				nps_vector.push_back(nps);
 			}break;
-		}read_file.close();
-	}cout << "file read" << endl;
+		}cout << "file read" << endl; read_file.close();
+	}
 }
 int Search_by_name_nps(vector<standart_of_nps>& nps_vector, string name)
 {
@@ -426,40 +437,51 @@ void Delete_pipe(vector<standart_of_pipe>& pipe_vector)
 		}
 	}
 }
-int Id_arr(vector <standart_of_nps> nps_vector) 
+int _Counter(vector<standart_of_pipe>& pipe_vector)
 {
-	int i = 0;
-	for (auto nps : nps_vector)
+	if (pipe_vector.size() != 0)
 	{
-		if (nps.id_nps!= i) { return i; }
-		++i;
+		int i = 0;
+		for (auto pipe : pipe_vector)
+		{
+			if (pipe.id_pipe > i) { i = pipe.id_pipe; }
+		}
+		return i+1;
 	}
+	else { return 0;}
 }
-int Id_arr(vector <standart_of_pipe> pipe_vector)
+int _Counter(vector<standart_of_nps>& nps_vector)
 {
-	int i = 0;
-	for (auto pipe : pipe_vector)
+	if (nps_vector.size() != 0)
 	{
-		if (pipe.id_pipe != i) { return i; }
-		++i;
+		int i = 0;
+		for (auto nps : nps_vector)
+		{
+			if (nps.id_nps > i) { i = nps.id_nps; }
+		}
+		return i+1;
 	}
+	else { return 0; }
+}
+void Print_change_menu()
+{
+	cout << "1.Udalit' 1 element" << endl << "2.Udalit' neskol'ko" << endl << "0.Exit";
 }
 int main()
 {
 	vector < standart_of_nps > nps_vector = {};
-	vector <standart_of_pipe> pipe_vector = {};
-	int pipe_counter = 0;
-	int nps_counter = 0;
+	vector <standart_of_pipe> pipe_vector = {};	
 	int variant;
+	int pipe_counter;
+	int nps_counter;
 	do 
 	{
 		Print_menu();
 		variant = get_variant();
 		switch (variant) {
 		case 1:
-		{
-			pipe_counter = Id_arr(pipe_vector);
-			if (pipe_vector.size() + 2 < nps_counter) { nps_counter = pipe_vector.size(); }
+		{	
+			pipe_counter = _Counter(pipe_vector);
 			auto pipe = Create_pipe(pipe_counter);
 			if (pipe.diameter_pipe == 0 || pipe.long_pipe == 0) { cout << " !!Error input,retry!!"; break; }
 			pipe_vector.push_back(pipe);
@@ -468,9 +490,7 @@ int main()
 		}
 		case 2:
 		{
-
-			nps_counter = Id_arr(nps_vector);
-			if (nps_vector.size() + 2 < nps_counter) { nps_counter = nps_vector.size(); }
+			nps_counter = _Counter(nps_vector);
 			auto nps = Create_nps(nps_counter);
 			if (nps.all_parts == 0) { cout << " !!Error input,retry!!"; break; }
 			nps_vector.push_back(nps);
@@ -491,10 +511,14 @@ int main()
 			break;
 		}
 		case 5:
+		{if (nps_vector.size() != 0)
 		{
-			cout << "Vvedite ID nps, kotoryu hotite izmenit'" << endl;
-			Chenge_by_id_nps(nps_vector);
+			Print_change_menu();
+			Change_by_id_nps(nps_vector);
 			break;
+		}
+		else { cout << "" << endl; break;}
+		
 		}
 		case 6:
 		{
