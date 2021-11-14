@@ -215,8 +215,9 @@ void Change_by_id_nps(vector <standart_of_nps>& nps_vector)
 	} if (check == false)cout << "ID ne naiden";
 	else { cout << "Izmeneniya sohraneni'"; }
 }
-void Chenge_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
+void Change_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 {
+	cout << "Vvedite ID trubi', kotoryu hotite izmenit'" << endl;
 	int search_id;
 	bool check = false;
 	auto i = 0;	
@@ -274,6 +275,11 @@ void Chenge_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 		}
 	} if (check == false)cout << "ID ne naiden";
 	else { cout << "Izmeneniya sohraneni'"; }
+}
+void Change_many_by_id_nps(vector <standart_of_nps>& nps_vector) 
+{
+
+
 }
 void file_outer(const vector <standart_of_pipe>& pipe_vector, const vector<standart_of_nps>& nps_vector)
 {
@@ -465,7 +471,7 @@ int _Counter(vector<standart_of_nps>& nps_vector)
 }
 void Print_change_menu()
 {
-	cout << "1.Udalit' 1 element" << endl << "2.Udalit' neskol'ko" << endl << "0.Exit";
+	cout << "1.Udalit' 1 element" << endl << "2.Udalit' neskol'ko" << endl << "0.Exit"<<endl;
 }
 int main()
 {
@@ -505,20 +511,36 @@ int main()
 			break;
 		}
 		case 4:
-		{
-			cout << "Vvedite ID trubi', kotoryu hotite izmenit'" << endl;
+		{			
 			Chenge_by_id_pipe(pipe_vector);
 			break;
 		}
 		case 5:
-		{if (nps_vector.size() != 0)
 		{
-			Print_change_menu();
-			Change_by_id_nps(nps_vector);
-			break;
-		}
-		else { cout << "" << endl; break;}
-		
+			if (nps_vector.size() != 0)
+			{
+			
+				int variant;			
+				do {
+					Print_change_menu();
+					variant = get_variant();
+					switch (variant)
+					{
+						case 1:
+						{
+							Change_by_id_nps(nps_vector);
+							break;
+						}
+						case 2:
+						{
+							
+							break;
+						}
+					}
+				
+				} while (variant != 0);break;				
+			}
+			else { cout << "Spisok pust" << endl; break;}
 		}
 		case 6:
 		{
@@ -539,16 +561,17 @@ int main()
 		case 9:
 		{
 			cout << "Delete:" << endl;
+
 			Delete_pipe(pipe_vector);
 			break;
 		}
 		case 10:
 			{
-				int variant2;
+				int variant;
 				do {
 						Print_menu_for_filter();
-						variant2 = get_variant();
-						switch (variant2)
+						variant = get_variant();
+						switch (variant)
 						{
 							case 1:
 							{
@@ -597,8 +620,8 @@ int main()
 							}
 
 						}
-					if (variant2 != 0)system("pause");
-				} while (variant2 != 0);
+					if (variant != 0)system("pause");
+				} while (variant != 0);
 			}
 		}
 		if (variant != 0)system("pause");
