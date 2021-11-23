@@ -160,14 +160,10 @@ standart_of_pipe Create_pipe(int pipe_id)
 	cin >> s.ready_pipe;
 	return s;
 }
-void Change_by_id_nps(vector <standart_of_nps>& nps_vector)
-{
-	int search_id;
+void Change_by_id_nps(vector <standart_of_nps>& nps_vector,int search_id)
+{	
 	bool check = false;
-	auto i = 0;
-	cin.ignore();
-	cout << "Vvedite id nps" << endl;
-	cin >> search_id;
+	auto i = 0;	
 	for (auto& nps : nps_vector)
 	{
 		++i;
@@ -200,7 +196,7 @@ void Change_by_id_nps(vector <standart_of_nps>& nps_vector)
 					}
 				case 2:
 					{
-						cout << "Vvediter novoe imya" << endl;
+						cout << "Vvedite novoe imya" << endl;
 						cin.ignore();
 						getline(cin, nps.name_nps);
 						while (nps.name_nps == "") {
@@ -279,8 +275,26 @@ void Change_by_id_pipe(vector <standart_of_pipe>& pipe_vector)
 void Change_many_by_id_nps(vector <standart_of_nps>& nps_vector) 
 {
 
+	int left_s,right_s;
+	cout << "Vvedite levyu granicu" << endl;
+	cin >> left_s;
+	cout << "Vvedite pravyu granicu" << endl;
+	cin >> right_s;
+	while((left_s>nps_vector.size())||(right_s>nps_vector.size())||(right_s<left_s)
+		|| (right_s == left_s))
+	{
+		cout <<"ERROR INPUT!!!"<<endl << "Vvedite levyu granicu" << endl;
+		cin >> left_s;
+		cout << "Vvedite pravyu granicu" << endl;
+		cin >> right_s;
+	}
+	for (left_s; left_s < right_s+1; left_s++)
+	{
+		Change_by_id_nps(nps_vector,left_s);
+	}
 
 }
+
 void file_outer(const vector <standart_of_pipe>& pipe_vector, const vector<standart_of_nps>& nps_vector)
 {
 	fstream file_out;
@@ -471,7 +485,7 @@ int _Counter(vector<standart_of_nps>& nps_vector)
 }
 void Print_change_menu()
 {
-	cout << "1.Udalit' 1 element" << endl << "2.Udalit' neskol'ko" << endl << "0.Exit"<<endl;
+	cout << "1.Izmenit' 1 element" << endl << "2.Izmenit' neskol'ko" << endl << "0.Exit"<<endl;
 }
 int main()
 {
@@ -511,9 +525,11 @@ int main()
 			break;
 		}
 		case 4:
-		{			
-			Chenge_by_id_pipe(pipe_vector);
-			break;
+		{
+			if (pipe_vector.size() != 0) {
+				Change_by_id_pipe(pipe_vector);
+				break;
+			}else { cout << "Spisok pust" << endl; break; }
 		}
 		case 5:
 		{
@@ -528,16 +544,18 @@ int main()
 					{
 						case 1:
 						{
-							Change_by_id_nps(nps_vector);
+							cout << "Vvedite id nps" << endl;
+							int search_id;
+							cin >> search_id;
+							Change_by_id_nps(nps_vector,search_id);
 							break;
 						}
 						case 2:
 						{
-							
+							Change_many_by_id_nps(nps_vector);
 							break;
 						}
-					}
-				
+					}if (variant != 0)system("pause");
 				} while (variant != 0);break;				
 			}
 			else { cout << "Spisok pust" << endl; break;}
